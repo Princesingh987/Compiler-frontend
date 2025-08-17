@@ -18,7 +18,7 @@ const CodeEditor = () => {
   const [output, setOutput] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const API_URL = import.meta.env.VITE_API_COMPILE_URL 
+  const API_URL = import.meta.env.VITE_API_COMPILE_URL;
 
   const handleEditorChange = (value) => setCode(value);
   const handleLanguageChange = (e) => {
