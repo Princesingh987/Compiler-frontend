@@ -238,13 +238,16 @@ const AuthForm = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Fix typo: seEffect -> useEffect
-  useEffect(() => {
-    const isLoggedIn = localStorage.getItem("isLoggedIn");
-    if (isLoggedIn && location.pathname !== "/dashboard") {
-      navigate("/dashboard");
-    }
-  }, [navigate, location.pathname]);
+ useEffect(() => {
+  const isLoggedIn = localStorage.getItem("isLoggedIn");
+  if (isLoggedIn && window.location.pathname !== "/dashboard") {
+    navigate("/dashboard");
+  }
+  if (!isLoggedIn && window.location.pathname !== "/") {
+    navigate("/"); // send to login page if not logged in
+  }
+}, [navigate]); // remove location.pathname
+
 
   const handleSignIn = async (e) => {
     e.preventDefault();
