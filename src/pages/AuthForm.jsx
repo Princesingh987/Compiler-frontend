@@ -130,7 +130,7 @@ useEffect(() => {
 
       toast.success("Sign In Successful!");
       e.target.reset();
-      // navigate("/");
+      navigate("/");
 
       if (user.role === "Admin") navigate("/dashboard");
       else navigate("/");
