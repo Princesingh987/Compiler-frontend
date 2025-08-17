@@ -3,20 +3,39 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import toast from "react-hot-toast";
 
+// const AuthForm = () => {
+//   const [isSignIn, setIsSignIn] = useState(false);
+//   const [loading, setLoading] = useState(false);
+//   const API_BASE = import.meta.env.VITE_API_BASE_URL;
+//   const navigate = useNavigate();
+
+//   useEffect(() => {
+//     const isLoggedIn = localStorage.getItem("isLoggedIn");
+//     const role = localStorage.getItem("userRole");
+//     if (isLoggedIn) {
+//       if (role === "Admin") navigate("/dashboard");
+//       else navigate("/");
+//     }
+//   }, [navigate]);
+
 const AuthForm = () => {
   const [isSignIn, setIsSignIn] = useState(false);
   const [loading, setLoading] = useState(false);
   const API_BASE = import.meta.env.VITE_API_BASE_URL;
   const navigate = useNavigate();
+  const location = useLocation(); 
 
   useEffect(() => {
     const isLoggedIn = localStorage.getItem("isLoggedIn");
     const role = localStorage.getItem("userRole");
-    if (isLoggedIn) {
-      if (role === "Admin") navigate("/dashboard");
-      else navigate("/");
+
+    // ✅ Redirect only if user is on the login page
+    if (isLoggedIn && location.pathname === "/login") {
+      if (role === "Admin") navigate("/dashboard", { replace: true });
+      else navigate("/", { replace: true });
     }
-  }, [navigate]);
+  }, [navigate, location]);
+
 
   const handleSignIn = async (e) => {
     e.preventDefault();
