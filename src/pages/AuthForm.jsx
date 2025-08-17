@@ -105,41 +105,46 @@ useEffect(() => {
   // };
 
    const handleSignIn = async (e) => {
-    e.preventDefault();
-    if (loading) return; // ✅ Prevent double submit
-    setLoading(true);
+  e.preventDefault();
+  if (loading) return;
+  setLoading(true);
 
-    const email = e.target["signin-email"].value.trim();
-    const password = e.target["signin-password"].value.trim();
+  const email = e.target["signin-email"].value.trim();
+  const password = e.target["signin-password"].value.trim();
 
-    if (!email || !password) {
-      toast.error("Please fill all fields");
-      setLoading(false);
-      return;
+  if (!email || !password) {
+    toast.error("Please fill all fields");
+    setLoading(false);
+    return;
+  }
+
+  try {
+    const response = await axios.post(`${API_BASE}/auth/login`, { email, password });
+    const { token, user } = response.data;
+
+    if (token) localStorage.setItem("token", token);
+    if (user) {
+      localStorage.setItem("isLoggedIn", "true");
+      localStorage.setItem("userRole", user.role);
     }
 
-    try {
-      const response = await axios.post(`${API_BASE}/auth/login`, { email, password });
-      const { token, user } = response.data;
+    toast.success("Sign In Successful!");
+    e.target.reset();
 
-      if (token) localStorage.setItem("token", token);
-      if (user) {
-        localStorage.setItem("isLoggedIn", "true");
-        localStorage.setItem("userRole", user.role);
-      }
-
-      toast.success("Sign In Successful!");
-      e.target.reset();
+    // ✅ Only one navigation
+    if (user.role === "Admin") {
+      navigate("/dashboard");
+    } else {
       navigate("/");
-
-      if (user.role === "Admin") navigate("/dashboard");
-      else navigate("/");
-    } catch (error) {
-      const msg = error.response?.data?.message || "Sign In failed";
-      toast.error(msg);
-    } finally {
-      setLoading(false);
     }
+  } catch (error) {
+    const msg = error.response?.data?.message || "Sign In failed";
+    toast.error(msg);
+  } finally {
+    setLoading(false);
+  }
+};
+
   };
 
   // 🚀 Handle Sign Up
