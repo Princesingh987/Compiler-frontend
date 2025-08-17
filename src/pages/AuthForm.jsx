@@ -27,18 +27,38 @@ const AuthForm = () => {
 //   const navigate = useNavigate();
 //   const location = useLocation(); 
 
+// useEffect(() => {
+//   const isLoggedIn = localStorage.getItem("isLoggedIn");
+//   const role = localStorage.getItem("userRole");
+
+//   if (isLoggedIn) {
+//     if (role === "Admin" && location.pathname !== "/dashboard") {
+//       navigate("/dashboard", { replace: true });
+//     } else if (role !== "Admin" && location.pathname !== "/") {
+//       navigate("/", { replace: true });
+//     }
+//   }
+// }, [navigate, location.pathname]);
+
+const [redirected, setRedirected] = useState(false);
+
 useEffect(() => {
+  if (redirected) return; // ✅ prevent repeated navigations
+
   const isLoggedIn = localStorage.getItem("isLoggedIn");
   const role = localStorage.getItem("userRole");
 
-  if (isLoggedIn) {
-    if (role === "Admin" && location.pathname !== "/dashboard") {
-      navigate("/dashboard", { replace: true });
-    } else if (role !== "Admin" && location.pathname !== "/") {
-      navigate("/", { replace: true });
-    }
+  if (!isLoggedIn) return;
+
+  if (role === "Admin" && location.pathname !== "/dashboard") {
+    setRedirected(true);
+    navigate("/dashboard", { replace: true });
+  } else if (role !== "Admin" && location.pathname !== "/") {
+    setRedirected(true);
+    navigate("/", { replace: true });
   }
-}, [navigate, location.pathname]);
+}, [navigate, location.pathname, redirected]);
+
 
 
   // const handleSignIn = async (e) => {
