@@ -116,7 +116,7 @@ useEffect(() => {
     }
 
     try {
-      const response = await axios.post(`${API_BASE}/login`, { email, password });
+      const response = await axios.post(`${API_BASE}/auth/login`, { email, password });
       const { token, user } = response.data;
 
       if (token) localStorage.setItem("token", token);
