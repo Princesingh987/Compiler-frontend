@@ -40,21 +40,31 @@ const AuthForm = () => {
 //   }
 // }, [navigate, location.pathname]);
 
+// useEffect(() => {
+//   const isLoggedIn = localStorage.getItem("isLoggedIn");
+//   const role = localStorage.getItem("userRole");
+
+//   // 🚀 Only redirect if user is on `/auth` (login/signup page)
+//   if (isLoggedIn && location.pathname === "/auth") {
+//     if (role === "Admin") {
+//       navigate("/dashboard", { replace: true });
+//     } else {
+//       navigate("/", { replace: true });
+//     }
+//   }
+// }, [navigate, location.pathname]);
+
+
 useEffect(() => {
   const isLoggedIn = localStorage.getItem("isLoggedIn");
   const role = localStorage.getItem("userRole");
 
-  // 🚀 Only redirect if user is on `/auth` (login/signup page)
+  // 🚀 Only auto-redirect if user is on /auth
   if (isLoggedIn && location.pathname === "/auth") {
-    if (role === "Admin") {
-      navigate("/dashboard", { replace: true });
-    } else {
-      navigate("/", { replace: true });
-    }
+    if (role === "Admin") navigate("/dashboard", { replace: true });
+    else navigate("/", { replace: true });
   }
 }, [navigate, location.pathname]);
-
-
 
 
   // const handleSignIn = async (e) => {
@@ -117,10 +127,10 @@ useEffect(() => {
 
       toast.success("Sign In Successful!");
       e.target.reset();
-      navigate("/");
+      // navigate("/");
 
-      // if (user.role === "Admin") navigate("/dashboard");
-      // else navigate("/");
+      if (user.role === "Admin") navigate("/dashboard");
+      else navigate("/");
     } catch (error) {
       const msg = error.response?.data?.message || "Sign In failed";
       toast.error(msg);

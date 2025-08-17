@@ -10,7 +10,7 @@ const Logout = () => {
     const logoutUser = async () => {
       try {
         // Make a POST request to backend logout route
-        await axios.post(`${import.meta.env.VITE_API_BASE_URL}logout`, {}, {
+        await axios.post(`${import.meta.env.VITE_API_BASE_URL}/logout`, {}, {
           withCredentials: true, // if you're using cookies for auth
         });
 
