@@ -326,7 +326,7 @@ useEffect(() => {
       </div>
     </div>
   );
-};
+
 
 export default AuthForm;
 
