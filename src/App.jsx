@@ -97,8 +97,8 @@ import CompileCode from "./pages/CompileCode.jsx";
 import MainLayout from "./Layouts/MainLayout";
 import ProtectedRoute from "./components/ProtectedRoute";
 
-// ✅ Check if logged in
-const isLoggedIn = () => localStorage.getItem("isLoggedIn") === "true";
+// ✅ Check if logged in using sessionStorage
+const isLoggedIn = () => sessionStorage.getItem("isLoggedIn") === "true";
 
 const router = createBrowserRouter([
   {

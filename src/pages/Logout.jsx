@@ -15,7 +15,7 @@ const Logout = () => {
         });
 
         // Clear local storage or token if used
-        localStorage.removeItem("isLoggedIn");
+        sessionStorage.removeItem("isLoggedIn");
         // localStorage.removeItem("token");
 
         alert("Logged out successfully");
