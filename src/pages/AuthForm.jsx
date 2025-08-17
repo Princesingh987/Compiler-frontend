@@ -8,15 +8,17 @@ const AuthForm = () => {
   const [loading, setLoading] = useState(false);
   const API_BASE = import.meta.env.VITE_API_BASE_URL;
   const navigate = useNavigate();
+  const location = useLocation();
 
-  useEffect(() => {
-    const isLoggedIn = localStorage.getItem("isLoggedIn");
-    const role = localStorage.getItem("userRole");
-    if (isLoggedIn) {
-      if (role === "Admin") navigate("/dashboard");
-      else navigate("/");
-    }
-  }, [navigate]);
+
+  // useEffect(() => {
+  //   const isLoggedIn = localStorage.getItem("isLoggedIn");
+  //   const role = localStorage.getItem("userRole");
+  //   if (isLoggedIn) {
+  //     if (role === "Admin") navigate("/dashboard");
+  //     else navigate("/");
+  //   }
+  // }, [navigate]);
 
 // const AuthForm = () => {
 //   const [isSignIn, setIsSignIn] = useState(false);
@@ -25,31 +27,69 @@ const AuthForm = () => {
 //   const navigate = useNavigate();
 //   const location = useLocation(); 
 
-//   seEffect(() => {
-//   const isLoggedIn = localStorage.getItem("isLoggedIn");
-//   const role = localStorage.getItem("userRole");
-//   if (isLoggedIn) {
-//     if (role === "Admin" && location.pathname !== "/dashboard") {
-//       navigate("/dashboard");
-//     } else if (role !== "Admin" && location.pathname !== "/") {
-//       navigate("/");
-//     }
-//   }
-// }, [navigate, location.pathname]);
+useEffect(() => {
+  const isLoggedIn = localStorage.getItem("isLoggedIn");
+  const role = localStorage.getItem("userRole");
+
+  if (isLoggedIn) {
+    if (role === "Admin" && location.pathname !== "/dashboard") {
+      navigate("/dashboard", { replace: true });
+    } else if (role !== "Admin" && location.pathname !== "/") {
+      navigate("/", { replace: true });
+    }
+  }
+}, [navigate, location.pathname]);
 
 
-  const handleSignIn = async (e) => {
+  // const handleSignIn = async (e) => {
+  //   e.preventDefault();
+  //   const email = e.target["signin-email"].value;
+  //   const password = e.target["signin-password"].value;
+
+  //   if (!email || !password) {
+  //     toast.error("Please fill all fields");
+  //     return;
+  //   }
+
+  //   try {
+  //     setLoading(true);
+  //     const response = await axios.post(`${API_BASE}/login`, { email, password });
+  //     const { token, user } = response.data;
+
+  //     if (token) localStorage.setItem("token", token);
+  //     if (user) {
+  //       localStorage.setItem("isLoggedIn", "true");
+  //       localStorage.setItem("userRole", user.role);
+  //     }
+
+  //     toast.success("Sign In Successful!");
+  //     e.target.reset();
+
+  //     if (user.role === "Admin") navigate("/dashboard");
+  //     else navigate("/");
+  //   } catch (error) {
+  //     const msg = error.response?.data?.message || "Sign In failed";
+  //     toast.error(msg);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+
+   const handleSignIn = async (e) => {
     e.preventDefault();
-    const email = e.target["signin-email"].value;
-    const password = e.target["signin-password"].value;
+    if (loading) return; // ✅ Prevent double submit
+    setLoading(true);
+
+    const email = e.target["signin-email"].value.trim();
+    const password = e.target["signin-password"].value.trim();
 
     if (!email || !password) {
       toast.error("Please fill all fields");
+      setLoading(false);
       return;
     }
 
     try {
-      setLoading(true);
       const response = await axios.post(`${API_BASE}/login`, { email, password });
       const { token, user } = response.data;
 
@@ -72,24 +112,28 @@ const AuthForm = () => {
     }
   };
 
+  // 🚀 Handle Sign Up
   const handleSignUp = async (e) => {
     e.preventDefault();
-    const name = e.target["signup-name"].value;
-    const email = e.target["signup-email"].value;
-    const password = e.target["signup-password"].value;
+    if (loading) return; // ✅ Prevent double submit
+    setLoading(true);
+
+    const name = e.target["signup-name"].value.trim();
+    const email = e.target["signup-email"].value.trim();
+    const password = e.target["signup-password"].value.trim();
     const role = e.target["signup-role"].value;
 
     if (!name || !email || !password || !role) {
       toast.error("Please fill all fields");
+      setLoading(false);
       return;
     }
 
     try {
-      setLoading(true);
       await axios.post(`${API_BASE}/signup`, { name, email, password, role });
       toast.success("Account created successfully!");
       e.target.reset();
-      setIsSignIn(true);
+      setIsSignIn(true); // Switch to sign-in after signup
     } catch (error) {
       const msg = error.response?.data?.message || "Sign Up failed";
       toast.error(msg);
@@ -97,6 +141,32 @@ const AuthForm = () => {
       setLoading(false);
     }
   };
+
+  // const handleSignUp = async (e) => {
+  //   e.preventDefault();
+  //   const name = e.target["signup-name"].value;
+  //   const email = e.target["signup-email"].value;
+  //   const password = e.target["signup-password"].value;
+  //   const role = e.target["signup-role"].value;
+
+  //   if (!name || !email || !password || !role) {
+  //     toast.error("Please fill all fields");
+  //     return;
+  //   }
+
+  //   try {
+  //     setLoading(true);
+  //     await axios.post(`${API_BASE}/signup`, { name, email, password, role });
+  //     toast.success("Account created successfully!");
+  //     e.target.reset();
+  //     setIsSignIn(true);
+  //   } catch (error) {
+  //     const msg = error.response?.data?.message || "Sign Up failed";
+  //     toast.error(msg);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
   return (
     <div className="min-h-screen flex justify-center items-center font-sans bg-gradient-to-br from-teal-200 to-green-200 text-gray-900 p-4">
