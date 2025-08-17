@@ -40,24 +40,20 @@ const AuthForm = () => {
 //   }
 // }, [navigate, location.pathname]);
 
-const [redirected, setRedirected] = useState(false);
-
 useEffect(() => {
-  if (redirected) return; // ✅ prevent repeated navigations
-
   const isLoggedIn = localStorage.getItem("isLoggedIn");
   const role = localStorage.getItem("userRole");
 
-  if (!isLoggedIn) return;
-
-  if (role === "Admin" && location.pathname !== "/dashboard") {
-    setRedirected(true);
-    navigate("/dashboard", { replace: true });
-  } else if (role !== "Admin" && location.pathname !== "/") {
-    setRedirected(true);
-    navigate("/", { replace: true });
+  // 🚀 Only redirect if user is on `/auth` (login/signup page)
+  if (isLoggedIn && location.pathname === "/auth") {
+    if (role === "Admin") {
+      navigate("/dashboard", { replace: true });
+    } else {
+      navigate("/", { replace: true });
+    }
   }
-}, [navigate, location.pathname, redirected]);
+}, [navigate, location.pathname]);
+
 
 
 
