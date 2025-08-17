@@ -26,15 +26,9 @@ const AuthForm = () => {
   const location = useLocation(); 
 
   useEffect(() => {
-    const isLoggedIn = localStorage.getItem("isLoggedIn");
-    const role = localStorage.getItem("userRole");
-
-    // ✅ Redirect only if user is on the login page
-    if (isLoggedIn && location.pathname === "/login") {
-      if (role === "Admin") navigate("/dashboard", { replace: true });
-      else navigate("/", { replace: true });
-    }
-  }, [navigate, location]);
+  const isLoggedIn = localStorage.getItem("isLoggedIn");
+  if (isLoggedIn) navigate("/");
+}, [navigate]);
 
 
   const handleSignIn = async (e) => {
