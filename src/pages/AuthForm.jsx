@@ -61,8 +61,10 @@ useEffect(() => {
 
   // 🚀 Only auto-redirect if user is on /auth
   if (isLoggedIn && location.pathname === "/auth") {
-    if (role === "Admin") navigate("/dashboard", { replace: true });
-    else navigate("/", { replace: true });
+    // if (role === "Admin") navigate("/dashboard", { replace: true });
+    // else navigate("/", { replace: true });
+    navigate("/");
+
   }
 }, [navigate, location.pathname]);
 
