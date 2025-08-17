@@ -117,9 +117,10 @@ useEffect(() => {
 
       toast.success("Sign In Successful!");
       e.target.reset();
+      navigate("/");
 
-      if (user.role === "Admin") navigate("/dashboard");
-      else navigate("/");
+      // if (user.role === "Admin") navigate("/dashboard");
+      // else navigate("/");
     } catch (error) {
       const msg = error.response?.data?.message || "Sign In failed";
       toast.error(msg);
