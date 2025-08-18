@@ -79,8 +79,6 @@
 
 // export default App;
 
-
-
 import { createBrowserRouter, RouterProvider, Navigate } from "react-router-dom";
 
 // Pages
@@ -97,8 +95,8 @@ import CompileCode from "./pages/CompileCode.jsx";
 import MainLayout from "./Layouts/MainLayout";
 import ProtectedRoute from "./components/ProtectedRoute";
 
-// ✅ Check if logged in using sessionStorage
-const isLoggedIn = () => sessionStorage.getItem("isLoggedIn") === "true";
+// ✅ Use localStorage for consistency
+const isLoggedIn = () => localStorage.getItem("isLoggedIn") === "true";
 
 const router = createBrowserRouter([
   {

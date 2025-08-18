@@ -32,7 +32,7 @@ const CodeEditor = () => {
     setLoading(true);
     setOutput("");
     try {
-      const res = await axios.post(`${API_URL}/compile`, { language, code });
+      const res = await axios.post(`${API_URL}compile`, { language, code });
       const data = res.data;
       setOutput(
         `Output:\n${data.output}\n\nExecution Time: ${data.executionTime}\nMemory Used: ${data.memoryUsed}`
