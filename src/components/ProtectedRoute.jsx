@@ -5,14 +5,13 @@ const ProtectedRoute = ({ children, allowedRoles }) => {
   const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
   const role = localStorage.getItem("userRole");
 
+  // Not logged in → send to /login (your actual login page)
   if (!isLoggedIn) {
-    // Not logged in → send to /auth (sign in/up page)
-    return <Navigate to="/auth" replace />;
+    return <Navigate to="/login" replace />;
   }
 
-  // If allowedRoles is provided, check if user's role is included
-  if (allowedRoles && Array.isArray(allowedRoles) && !allowedRoles.includes(role)) {
-    // Unauthorized role → send to home
+  // Role-based check (only if allowedRoles is provided)
+  if (allowedRoles && !allowedRoles.includes(role)) {
     return <Navigate to="/" replace />;
   }
 

@@ -67,54 +67,116 @@ const AuthForm = () => {
   };
 
   // 🚀 Handle Sign Up (auto-login + redirect)
+  // const handleSignUp = async (e) => {
+  //   e.preventDefault();
+  //   if (loading) return;
+  //   setLoading(true);
+
+  //   const name = e.target["signup-name"].value.trim();
+  //   const email = e.target["signup-email"].value.trim();
+  //   const password = e.target["signup-password"].value.trim();
+  //   const role = e.target["signup-role"].value;
+
+  //   if (!name || !email || !password || !role) {
+  //     toast.error("Please fill all fields");
+  //     setLoading(false);
+  //     return;
+  //   }
+
+  //   try {
+  //     const response = await axios.post(`${API_BASE}/auth/signup`, {
+  //       name,
+  //       email,
+  //       password,
+  //       role,
+  //     });
+
+  //     const { token, user } = response.data;
+
+  //     if (token) localStorage.setItem("token", token);
+  //     if (user) {
+  //       localStorage.setItem("isLoggedIn", "true");
+  //       localStorage.setItem("userRole", user.role);
+  //     }
+
+  //     toast.success("Account created successfully!");
+  //     e.target.reset();
+
+  //     // ✅ Directly redirect after signup
+  //     if (user.role === "Admin") {
+  //       navigate("/dashboard");
+  //     } else {
+  //       navigate("/");
+  //     }
+  //      return;
+  //   } catch (error) {
+  //     const msg = error.response?.data?.message || "Sign Up failed";
+  //     toast.error(msg);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+
+  
   const handleSignUp = async (e) => {
-    e.preventDefault();
-    if (loading) return;
-    setLoading(true);
+  e.preventDefault();
+  if (loading) return;
+  setLoading(true);
 
-    const name = e.target["signup-name"].value.trim();
-    const email = e.target["signup-email"].value.trim();
-    const password = e.target["signup-password"].value.trim();
-    const role = e.target["signup-role"].value;
+  const name = e.target["signup-name"].value.trim();
+  const email = e.target["signup-email"].value.trim();
+  const password = e.target["signup-password"].value.trim();
+  const role = e.target["signup-role"].value;
 
-    if (!name || !email || !password || !role) {
-      toast.error("Please fill all fields");
-      setLoading(false);
-      return;
+  if (!name || !email || !password || !role) {
+    toast.error("Please fill all fields");
+    setLoading(false);
+    return;
+  }
+
+  let user;
+
+  try {
+    const response = await axios.post(`${API_BASE}/auth/signup`, {
+      name,
+      email,
+      password,
+      role,
+    });
+
+    const { token } = response.data;
+    user = response.data.user;
+
+    if (token) localStorage.setItem("token", token);
+    if (user) {
+      localStorage.setItem("isLoggedIn", "true");
+      localStorage.setItem("userRole", user.role);
     }
 
-    try {
-      const response = await axios.post(`${API_BASE}/auth/signup`, {
-        name,
-        email,
-        password,
-        role,
-      });
+    toast.success("Account created successfully!");
+  } catch (error) {
+    const msg = error.response?.data?.message || "Sign Up failed";
+    toast.error(msg);
+    setLoading(false);
+    return;
+  }
 
-      const { token, user } = response.data;
+  // 🔒 Isolate post-signup operations
+  try {
+    e.target.reset();
 
-      if (token) localStorage.setItem("token", token);
-      if (user) {
-        localStorage.setItem("isLoggedIn", "true");
-        localStorage.setItem("userRole", user.role);
-      }
-
-      toast.success("Account created successfully!");
-      e.target.reset();
-
-      // ✅ Directly redirect after signup
-      if (user.role === "Admin") {
-        navigate("/dashboard");
-      } else {
-        navigate("/");
-      }
-    } catch (error) {
-      const msg = error.response?.data?.message || "Sign Up failed";
-      toast.error(msg);
-    } finally {
-      setLoading(false);
+    if (user?.role === "Admin") {
+      navigate("/dashboard");
+    } else {
+      navigate("/");
     }
-  };
+  } catch (navError) {
+    console.error("Navigation or reset failed:", navError);
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   return (
     <div className="min-h-screen flex justify-center items-center font-sans bg-gradient-to-br from-teal-200 to-green-200 text-gray-900 p-4">
